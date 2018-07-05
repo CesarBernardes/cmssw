@@ -55,7 +55,7 @@ hiConformalPixelTracksPhase1TrackingRegions = _globalTrackingRegionWithVertices.
     nSigmaZ = 3.0,
     sigmaZVertex = 3.0,
     fixedError = 0.2,
-    VertexCollection = "goodOfflinePrimaryVertices",
+    VertexCollection = "offlinePrimaryVertices",
     ptMin = 0.3,
     useFoundVertices = True,
     originRadius = 0.2 
@@ -93,7 +93,7 @@ hiConformalPixelTracksPhase1HitQuadrupletsCA = hiLowPtQuadStepTracksHitQuadruple
 
 #Filter
 hiConformalPixelTracksPhase1Filter = hiConformalPixelFilter.clone(
-	VertexCollection = cms.InputTag("goodOfflinePrimaryVertices"),
+	VertexCollection = cms.InputTag("offlinePrimaryVertices"),
         chi2 = cms.double(999.9),
         lipMax = cms.double(999.0),
         nSigmaLipMaxTolerance = cms.double(999.9),
