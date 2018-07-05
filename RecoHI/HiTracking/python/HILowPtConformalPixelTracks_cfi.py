@@ -63,23 +63,22 @@ hiConformalPixelTracksPhase1TrackingRegions = _globalTrackingRegionWithVertices.
 
 # SEEDING LAYERS
 # Using 4 layers layerlist
-from RecoHI.HiTracking.hiLowPtQuadStep_cff import hiLowPtQuadStepSeedLayers as hiConformalPixelTracksPhase1SeedLayers
+from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepSeedLayers as hiConformalPixelTracksPhase1SeedLayers
+
 
 # Hit ntuplets
-from RecoHI.HiTracking.hiLowPtQuadStep_cff import hiLowPtQuadStepTracksHitDoubletsCA 
-hiConformalPixelTracksPhase1HitDoubletsCA = hiLowPtQuadStepTracksHitDoubletsCA.clone(
-	seedingLayers = "hiConformalPixelTracksPhase1SeedLayers",
+from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepHitDoublets
+hiConformalPixelTracksPhase1HitDoubletsCA = lowPtQuadStepHitDoublets.clone(
+        seedingLayers = "hiConformalPixelTracksPhase1SeedLayers",
         trackingRegions = "hiConformalPixelTracksPhase1TrackingRegions"
 )
 
-from RecoHI.HiTracking.hiLowPtQuadStep_cff import hiLowPtQuadStepTracksHitQuadrupletsCA
-hiConformalPixelTracksPhase1HitQuadrupletsCA = hiLowPtQuadStepTracksHitQuadrupletsCA.clone(
+
+from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepHitQuadruplets
+hiConformalPixelTracksPhase1HitQuadrupletsCA = lowPtQuadStepHitQuadruplets.clone(
 	doublets = "hiConformalPixelTracksPhase1HitDoubletsCA",
         CAPhiCut = cms.double(0.2),
         CAThetaCut = cms.double(0.0012),
-        SeedComparitorPSet = cms.PSet(
-           ComponentName = cms.string('none')
-        ),
         extraHitRPhitolerance = cms.double(0.032),
         maxChi2 = cms.PSet(
            enabled = cms.bool(True),
@@ -87,8 +86,7 @@ hiConformalPixelTracksPhase1HitQuadrupletsCA = hiLowPtQuadStepTracksHitQuadruple
            pt2 = cms.double(2),
            value1 = cms.double(200),
            value2 = cms.double(50)
-        ),
-        mightGet = cms.untracked.vstring('IntermediateHitDoublets_hiConformalPixelTracksPhase1HitDoubletsCA__RECO'),
+        )
 )
 
 #Filter
