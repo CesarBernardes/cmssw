@@ -63,7 +63,8 @@ hiConformalPixelTracksPhase1TrackingRegions = _globalTrackingRegionWithVertices.
 
 # SEEDING LAYERS
 # Using 4 layers layerlist
-from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepSeedLayers as hiConformalPixelTracksPhase1SeedLayers
+from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepSeedLayers
+hiConformalPixelTracksPhase1SeedLayers = lowPtQuadStepSeedLayers.clone()
 
 
 # Hit ntuplets
