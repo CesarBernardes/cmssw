@@ -65,6 +65,14 @@ hiConformalPixelTracksPhase1TrackingRegions = _globalTrackingRegionWithVertices.
 # Using 4 layers layerlist
 from RecoTracker.IterativeTracking.LowPtQuadStep_cff import lowPtQuadStepSeedLayers
 hiConformalPixelTracksPhase1SeedLayers = lowPtQuadStepSeedLayers.clone()
+hiConformalPixelTracksPhase1SeedLayers.BPix = cms.PSet( 
+        HitProducer = cms.string('siPixelRecHits'),
+        TTRHBuilder = cms.string('WithTrackAngle'),
+)
+hiConformalPixelTracksPhase1SeedLayers.FPix = cms.PSet( 
+        HitProducer = cms.string('siPixelRecHits'),
+        TTRHBuilder = cms.string('WithTrackAngle'),
+)
 
 
 # Hit ntuplets
@@ -80,6 +88,9 @@ hiConformalPixelTracksPhase1HitQuadrupletsCA = lowPtQuadStepHitQuadruplets.clone
 	doublets = "hiConformalPixelTracksPhase1HitDoubletsCA",
         CAPhiCut = cms.double(0.2),
         CAThetaCut = cms.double(0.0012),
+        SeedComparitorPSet = cms.PSet( 
+           ComponentName = cms.string('none')
+        ),
         extraHitRPhitolerance = cms.double(0.032),
         maxChi2 = cms.PSet(
            enabled = cms.bool(True),
@@ -108,7 +119,6 @@ hiConformalPixelTracksPhase1 = cms.EDProducer("PixelTrackProducer",
     Filter = cms.InputTag("hiConformalPixelTracksPhase1Filter"),
     Fitter = cms.InputTag("pixelFitterByConformalMappingAndLine"),
     SeedingHitSets = cms.InputTag("hiConformalPixelTracksPhase1HitQuadrupletsCA"),
-    mightGet = cms.untracked.vstring('RegionsSeedingHitSets_hiConformalPixelTracksPhase1HitQuadrupletsCA__RECO')
 )
 
 
