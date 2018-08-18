@@ -84,8 +84,8 @@ class SiStripHybridFormatAnalyzer : public edm::EDAnalyzer {
       void analyze(const edm::Event&, const edm::EventSetup&) override;
       void endJob() override ;
       
-	  edm::InputTag srcDigis_;
-	  edm::InputTag srcAPVCM_;
+          edm::EDGetTokenT<edm::DetSetVector<SiStripDigi> > srcDigis_;  
+          edm::EDGetTokenT<edm::DetSetVector<SiStripProcessedRawDigi> > srcAPVCM_; 
 	  edm::Service<TFileService> fs_;
 	  
 	  TH1F* h1Digis_;
@@ -117,8 +117,8 @@ class SiStripHybridFormatAnalyzer : public edm::EDAnalyzer {
 SiStripHybridFormatAnalyzer::SiStripHybridFormatAnalyzer(const edm::ParameterSet& conf){
    
 
-  srcDigis_ =  conf.getParameter<edm::InputTag>( "srcDigis" );
-  srcAPVCM_ =  conf.getParameter<edm::InputTag>( "srcAPVCM" );
+  srcDigis_ =  consumes<edm::DetSetVector<SiStripDigi>>(conf.getParameter<edm::InputTag>("srcDigis"));
+  srcAPVCM_ = consumes<edm::DetSetVector<SiStripProcessedRawDigi>>(conf.getParameter<edm::InputTag>("srcAPVCM"));
   nModuletoDisplay_ = conf.getParameter<uint32_t>( "nModuletoDisplay" );
   plotAPVCM_ = conf.getParameter<bool>( "plotAPVCM" );
 
@@ -195,8 +195,8 @@ SiStripHybridFormatAnalyzer::analyze(const edm::Event& e, const edm::EventSetup&
      
      if(plotAPVCM_){
      edm::Handle<edm::DetSetVector<SiStripProcessedRawDigi> > moduleCM;
-     e.getByLabel(srcAPVCM_,moduleCM);
-   	  
+     e.getByToken(srcAPVCM_,moduleCM);    	 
+ 
 
      edm::DetSetVector<SiStripProcessedRawDigi>::const_iterator itCMDetSetV =moduleCM->begin();
      for (; itCMDetSetV != moduleCM->end(); ++itCMDetSetV){  
@@ -211,8 +211,7 @@ SiStripHybridFormatAnalyzer::analyze(const edm::Event& e, const edm::EventSetup&
      uint32_t NBadAPVevent=0; 
 
      edm::Handle<edm::DetSetVector<SiStripDigi> >moduleDigis;
-   	 e.getByLabel(srcDigis_, moduleDigis); 
-   
+         e.getByToken(srcDigis_, moduleDigis); 
      
      edm::DetSetVector<SiStripDigi>::const_iterator itDigiDetSetV =moduleDigis->begin();
      for (; itDigiDetSetV != moduleDigis->end(); ++itDigiDetSetV){ 
