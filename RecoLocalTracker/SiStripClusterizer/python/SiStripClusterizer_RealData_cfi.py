@@ -21,3 +21,7 @@ phase2_tracker.toModify(siStripClusters, # FIXME
                                      cms.InputTag('siStripZeroSuppression','ScopeMode'))
 )
 
+# This is for Hybrid Format ZS used for 2018 PbPb data-taking
+from Configuration.Eras.Modifier_pp_on_AA_2018_cff import pp_on_AA_2018
+pp_on_AA_2018.toModify(siStripClusters, DigiProducersList = cms.VInputTag(cms.InputTag("siStripZeroSuppression","ZeroSuppressed")))
+
