@@ -58,3 +58,43 @@ phase2_muon.toReplaceWith(DigiToRaw, DigiToRaw.copyAndExclude([rpcpacker]))
 
 from Configuration.Eras.Modifier_fastSim_cff import fastSim
 fastSim.toReplaceWith(DigiToRaw, DigiToRaw.copyAndExclude([siPixelRawData,SiStripDigiToRaw,castorRawData]))
+
+
+# for SiStrip Hybrid format data emulation 
+# It runs on 2015 PbPb data in VR mode
+from Configuration.Eras.Era_Run2_HI_cff import run2_HI_specific
+def _modifyDigiToRawForRun2_HI( process ) :
+   
+   process.load('RecoLocalTracker/SiStripZeroSuppression/SiStripZeroSuppression_cfi')    
+   process.siStripZeroSuppression.produceRawDigis = False
+   process.siStripZeroSuppression.produceHybridFormat = True
+   process.siStripZeroSuppression.Algorithms.APVInspectMode = 'HybridEmulation'
+   process.siStripZeroSuppression.Algorithms.APVRestoreMode = ''
+   process.siStripZeroSuppression.Algorithms.CommonModeNoiseSubtractionMode = 'Median'
+   process.siStripZeroSuppression.Algorithms.MeanCM = 512
+   process.siStripZeroSuppression.Algorithms.DeltaCMThreshold = 20
+   process.siStripZeroSuppression.Algorithms.Use10bitsTruncation = True
+   process.siStripZeroSuppression.RawDigiProducersList = cms.VInputTag(cms.InputTag("siStripDigis","VirginRaw"))
+
+   process.siStripRepackZS = cms.EDProducer("SiStripDigiToRawModule",
+      InputDigis       = cms.InputTag("siStripZeroSuppression", "VirginRaw"),
+      FedReadoutMode = cms.string('Zero suppressed'),
+      PacketCode = cms.string("ZERO_SUPPRESSED10"),
+      UseFedKey = cms.bool(False),
+      UseWrongDigiType = cms.bool(False),
+      CopyBufferHeader = cms.bool(False),
+      RawDataTag = cms.InputTag('rawDataCollector')
+   )
+
+   process.rawDataRepacker = cms.EDProducer("RawDataCollectorByLabel",
+      verbose = cms.untracked.int32(0),     # 0 = quiet, 1 = collection list, 2 = FED list
+      RawCollectionList = cms.VInputTag( 
+                                      cms.InputTag('siStripRepackZS'),
+                                      cms.InputTag('rawDataCollector')
+      ),
+   )
+
+   process.DigiToRaw = cms.Sequence(process.siStripZeroSuppression+process.siStripRepackZS+process.rawDataRepacker)
+
+modifyConfigurationStandardSequencesDigiToRawForRun2_HI_ = run2_HI_specific.makeProcessModifier( _modifyDigiToRawForRun2_HI )
+
