@@ -29,3 +29,6 @@ phase2_tracker.toModify(siStripZeroSuppression, # FIXME
                                         cms.InputTag('simSiStripDigis','ScopeMode'))
 )
 
+# the input digis from Hybrid format to ZS should be changed -- for HI tests
+from Configuration.Eras.Era_Run2_HI_HybridSiStrip_cff import run2_HI_HybridSiStrip
+run2_HI_HybridSiStrip.toModify(siStripZeroSuppression,RawDigiProducersList = cms.VInputTag(cms.InputTag('siStripDigis','ZeroSuppressed')))
