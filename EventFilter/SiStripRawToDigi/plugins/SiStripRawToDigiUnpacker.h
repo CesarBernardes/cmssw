@@ -8,6 +8,8 @@
 #include "DataFormats/SiStripCommon/interface/SiStripConstants.h"
 #include "EventFilter/SiStripRawToDigi/interface/SiStripFEDBuffer.h"
 #include "WarningSummary.h"
+#include "TH2F.h"
+#include "TProfile.h"
  
 /// sistrip classes
 namespace sistrip { class RawToClustersLazyUnpacker; }
@@ -40,7 +42,7 @@ namespace sistrip {
     ~RawToDigiUnpacker();
     
     /// creates digis
-    void createDigis( const SiStripFedCabling&, const FEDRawDataCollection&, SiStripEventSummary&, RawDigis& scope_mode, RawDigis& virgin_raw, RawDigis& proc_raw, Digis& zero_suppr, DetIdCollection&, RawDigis& common_mode );
+    void createDigis( const SiStripFedCabling& , const FEDRawDataCollection& , SiStripEventSummary& , RawDigis& scope_mode, RawDigis& virgin_raw, RawDigis& proc_raw, Digis& zero_suppr, DetIdCollection& , RawDigis& common_mode, TH2F *strips_h, TProfile *strips_p);
     
     /// trigger info
     void triggerFed( const FEDRawDataCollection&, SiStripEventSummary&, const uint32_t& event );

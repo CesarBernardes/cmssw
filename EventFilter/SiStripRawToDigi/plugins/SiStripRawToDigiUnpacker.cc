@@ -19,6 +19,7 @@
 #include <ext/algorithm>
 #include "FWCore/Utilities/interface/RunningAverage.h"
 
+
 namespace sistrip {
 
   RawToDigiUnpacker::RawToDigiUnpacker( int16_t appended_bytes, int16_t fed_buffer_dump_freq, int16_t fed_event_dump_freq, int16_t trigger_fed_id,
@@ -66,7 +67,7 @@ namespace sistrip {
 
   }
 
-  void RawToDigiUnpacker::createDigis( const SiStripFedCabling& cabling, const FEDRawDataCollection& buffers, SiStripEventSummary& summary, RawDigis& scope_mode, RawDigis& virgin_raw, RawDigis& proc_raw, Digis& zero_suppr, DetIdCollection& detids, RawDigis& cm_values ) {
+  void RawToDigiUnpacker::createDigis( const SiStripFedCabling& cabling, const FEDRawDataCollection& buffers, SiStripEventSummary& summary, RawDigis& scope_mode, RawDigis& virgin_raw, RawDigis& proc_raw, Digis& zero_suppr, DetIdCollection& detids, RawDigis& cm_values, TH2F *strips_h, TProfile *strips_p) {
 
     // Clear done at the end
     assert(zs_work_digis_.empty()); 
@@ -106,6 +107,8 @@ namespace sistrip {
     
       // Retrieve FED raw data for given FED 
       const FEDRawData& input = buffers.FEDData( static_cast<int>(*ifed) );
+      strips_h->Fill(*ifed,input.size());
+      strips_p->Fill(*ifed,input.size());
     
       // Some debug on FED buffer size
       if ( edm::isDebugEnabled() ) {

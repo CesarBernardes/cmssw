@@ -14,6 +14,11 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <cstdlib>
+#include "FWCore/ServiceRegistry/interface/Service.h" 
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "CommonTools/Utils/interface/TFileDirectory.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
 
 namespace sistrip {
 
@@ -30,6 +35,10 @@ namespace sistrip {
 	<< "[sistrip::RawToDigiModule::" << __func__ << "]"
 	<< " Constructing object...";
     }
+  
+    edm::Service<TFileService> fs;
+    strips_h = fs->make<TH2F>( "stripOcc"  , ";FedId;Size (bytes)", 440,  50.,  490.,100,0,40000 );
+    strips_p = fs->make<TProfile>( "avg"  , ";FedId;Average Size (bytes)", 440,  50.,  490. ); 
     
     token_ = consumes<FEDRawDataCollection>(pset.getParameter<edm::InputTag>("ProductLabel"));
     int16_t appended_bytes = pset.getParameter<int>("AppendedBytes");
@@ -108,7 +117,7 @@ namespace sistrip {
     edm::DetSetVector<SiStripRawDigi>* cm = new edm::DetSetVector<SiStripRawDigi>();
   
     // Create digis
-    if ( rawToDigi_ ) { rawToDigi_->createDigis( *cabling_,*buffers,*summary,*sm,*vr,*pr,*zs,*ids,*cm ); }
+    if ( rawToDigi_ ) { rawToDigi_->createDigis( *cabling_,*buffers,*summary,*sm,*vr,*pr,*zs,*ids,*cm,strips_h,strips_p ); }  
   
     // Create unique_ptr's of digi products
     std::unique_ptr< edm::DetSetVector<SiStripRawDigi> > sm_dsv(sm);

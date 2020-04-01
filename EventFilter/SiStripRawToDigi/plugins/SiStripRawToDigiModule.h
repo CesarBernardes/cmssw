@@ -8,6 +8,8 @@
 #include "DataFormats/FEDRawData/interface/FEDRawDataCollection.h"
 #include "boost/cstdint.hpp"
 #include <string>
+#include "TH2F.h"
+#include "TProfile.h"
 
 namespace sistrip { class RawToDigiModule; }
 namespace sistrip { class RawToDigiUnpacker; }
@@ -33,7 +35,10 @@ namespace sistrip {
     void beginRun( const edm::Run&, const edm::EventSetup& ) override;
     void produce( edm::Event&, const edm::EventSetup& ) override;
     void endStream() override;
-    
+   
+    TH2F * strips_h;
+    TProfile * strips_p; 
+ 
   private: 
     
     void updateCabling( const edm::EventSetup& );
